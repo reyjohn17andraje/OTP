@@ -79,12 +79,7 @@ app.post('/request-otp', async (req, res) => {
                 </p>
 
                 <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-
-                <!-- Footer -->
-                <p style="font-size: 12px; color: #94a3b8; text-align: center; margin: 0;">
-                  © 2026 Acme Corp, Inc. All rights reserved.<br>
-                  123 Security Blvd, Tech City
-                </p>
+                
               </td>
             </tr>
           </table>
