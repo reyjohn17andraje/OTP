@@ -37,7 +37,7 @@ app.post('/request-otp', async (req, res) => {
   // Send Email via Mailtrap
   try {
     await transporter.sendMail({
-      from: '"Acme Security" <noreply@acmecorp.com>',
+      from: '"CNX Realty" <noreply@cnxrealty.com>',
       to: email,
       subject: `Your verification code is ${otp}`,
       html: `
