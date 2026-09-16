@@ -1,8 +1,12 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const cors = require('cors'); // Added CORS for frontend compatibility
 
 const app = express();
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 // In-memory store for OTPs (In production, use Redis or a database)
@@ -123,7 +127,8 @@ app.post('/verify-otp', (req, res) => {
   }
 });
 
-// Start server
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+// Start server (Updated to support cloud hosting ports)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
