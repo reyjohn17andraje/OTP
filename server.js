@@ -48,10 +48,6 @@ app.post('/request-otp', async (req, res) => {
           <table align="center" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; margin: 0 auto; padding: 32px; border-collapse: collapse;">
             <tr>
               <td>
-                <!-- Header / Logo area -->
-                <div style="text-align: center; margin-bottom: 24px;">
-                  <h2 style="margin: 0; color: #0f172a; font-size: 24px;">Acme Corp</h2>
-                </div>
 
                 <h3 style="margin-top: 0; font-size: 18px; color: #1e293b;">Verify your email address</h3>
                 <p style="font-size: 14px; line-height: 1.6; color: #475569; margin-bottom: 24px;">
