@@ -1,17 +1,17 @@
 {
-  "name": "mailtrap-otp-demo",
+  "name": "mock-otp-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Mock OTP Verification API using Express and Mailtrap",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1",
-    "nodemailer": "^10.0.10"
+    "cors": "^2.8.5",
+    "express": "^4.19.0",
+    "nodemailer": "^6.9.13"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
