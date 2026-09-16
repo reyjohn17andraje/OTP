@@ -1,24 +1,22 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const cors = require('cors'); // Added CORS for frontend compatibility
+const cors = require('cors'); 
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// In-memory store for OTPs (In production, use Redis or a database)
 const otpStore = {};
 
-// 1. Configure Mailtrap Transporter
+// 1. Configure Gmail Transporter
 const transporter = nodemailer.createTransport({
-  host: 'sandbox.smtp.mailtrap.io',
-  port: 2525,
+  service: 'gmail',
   auth: {
-    user: '222897a568cd24',
-    pass: '8c174fad04aa45'
+    // We use process.env here for security when deploying to Render
+    user: process.env.GMAIL_USER, 
+    pass: process.env.GMAIL_APP_PASSWORD 
   }
 });
 
@@ -27,17 +25,15 @@ app.post('/request-otp', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
-  // Generate a secure 6-digit OTP
   const otp = crypto.randomInt(100000, 999999).toString();
-  
-  // Store OTP with an expiration (e.g., 5 minutes)
   const expiresAt = Date.now() + 5 * 60 * 1000;
+  
   otpStore[email] = { otp, expiresAt };
 
-  // Send Email via Mailtrap
   try {
     await transporter.sendMail({
-      from: '"CNX Realty" <noreply@cnxrealty.com>',
+      // The 'from' address should match your Gmail address to avoid spam filters
+      from: `"Security Team" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: `Your verification code is ${otp}`,
       html: `
@@ -79,7 +75,7 @@ app.post('/request-otp', async (req, res) => {
                 </p>
 
                 <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-                
+
               </td>
             </tr>
           </table>
@@ -87,8 +83,9 @@ app.post('/request-otp', async (req, res) => {
         </html>
       `
     });
-    console.log(`OTP sent to ${email} via Mailtrap Sandbox`);
-    res.json({ message: 'OTP sent successfully. Check Mailtrap!' });
+    
+    console.log(`OTP sent to ${email} via Gmail`);
+    res.json({ message: 'OTP sent successfully!' });
   } catch (error) {
     console.error('Error sending email:', error);
     res.status(500).json({ error: 'Failed to send OTP' });
@@ -102,27 +99,23 @@ app.post('/verify-otp', (req, res) => {
   
   const record = otpStore[email];
   
-  // Check if OTP was requested
   if (!record) {
     return res.status(400).json({ error: 'No OTP found for this email' });
   }
 
-  // Check expiration
   if (Date.now() > record.expiresAt) {
     delete otpStore[email];
     return res.status(400).json({ error: 'OTP has expired' });
   }
 
-  // Validate OTP
   if (record.otp === otp) {
-    delete otpStore[email]; // Clear it so it cannot be reused
+    delete otpStore[email]; 
     return res.json({ message: 'Success! OTP verified and user authenticated.' });
   } else {
     return res.status(400).json({ error: 'Invalid OTP' });
   }
 });
 
-// Start server (Updated to support cloud hosting ports)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
